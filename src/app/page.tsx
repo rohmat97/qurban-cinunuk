@@ -30,19 +30,19 @@ export default function QurbanCouponApp() {
   // Shohibul Qurban Family List State
   const [shohibulList, setShohibulList] = useState<string[]>([
     "Een Sumarni binti Umar",
-    "Rizal Nugraha & Kel.",
-    "Itang Dahyar & Kel.",
+    "Rizal Nugraha bin Dwi  Priyono dan Keluarga",
+    "Itang Dahyar bin Umar dan Keluarga",
     "Kory Anggraeni binti Itang",
-    "Citra Maulidiah binti B.",
-    "Acep Roni & Kel.",
-    "Khusnul Yusran T. bin Acep",
-    "Yadi Rusmaryadi bin Ewen R.",
+    "Citra Maulidiah binti Bakhtiar",
+    "Acep Roni bin Umar dan Keluarga",
+    "Khusnul Yusran Taufik bin Acep",
+    "Yadi Rusmaryadi bin Ewen Ruswandi",
     "Ade Maryati binti Umar",
     "Rezki Novansyah bin Sonny",
     "Vani Marindani binti Yadi",
-    "Revandra Adhyasta A. bin Rezki",
-    "Rasheza Kamila Z. bin Rezki",
-    "Rindu Mayangsari binti Titing"
+    "Revandra adhyasta alkhalifi bin rezki novansyah",
+    "Rasheza kamila zahra binti rezki novansyah",
+    "Rindu Mayangsari Binti Titing Sukarti"
   ]);
 
   const [newShohibul, setNewShohibul] = useState("");
@@ -367,19 +367,19 @@ export default function QurbanCouponApp() {
   const resetShohibulDefault = () => {
     setShohibulList([
       "Een Sumarni binti Umar",
-      "Rizal Nugraha & Kel.",
-      "Itang Dahyar & Kel.",
+      "Rizal Nugraha bin Dwi  Priyono dan Keluarga",
+      "Itang Dahyar bin Umar dan Keluarga",
       "Kory Anggraeni binti Itang",
-      "Citra Maulidiah binti B.",
-      "Acep Roni & Kel.",
-      "Khusnul Yusran T. bin Acep",
-      "Yadi Rusmaryadi bin Ewen R.",
+      "Citra Maulidiah binti Bakhtiar",
+      "Acep Roni bin Umar dan Keluarga",
+      "Khusnul Yusran Taufik bin Acep",
+      "Yadi Rusmaryadi bin Ewen Ruswandi",
       "Ade Maryati binti Umar",
       "Rezki Novansyah bin Sonny",
       "Vani Marindani binti Yadi",
-      "Revandra Adhyasta A. bin Rezki",
-      "Rasheza Kamila Z. bin Rezki",
-      "Rindu Mayangsari binti Titing"
+      "Revandra adhyasta alkhalifi bin rezki novansyah",
+      "Rasheza kamila zahra binti rezki novansyah",
+      "Rindu Mayangsari Binti Titing Sukarti"
     ]);
   };
 
@@ -483,11 +483,10 @@ export default function QurbanCouponApp() {
         <div className="flex border-b border-slate-700 bg-slate-850 px-2 pt-2">
           <button
             onClick={() => setActiveTab("content")}
-            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${
-              activeTab === "content"
-                ? "border-emerald-500 text-emerald-400"
-                : "border-transparent text-slate-400 hover:text-slate-200"
-            }`}
+            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${activeTab === "content"
+              ? "border-emerald-500 text-emerald-400"
+              : "border-transparent text-slate-400 hover:text-slate-200"
+              }`}
           >
             <div className="flex flex-col items-center gap-1">
               <FileText className="w-4 h-4" />
@@ -496,11 +495,10 @@ export default function QurbanCouponApp() {
           </button>
           <button
             onClick={() => setActiveTab("recipients")}
-            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${
-              activeTab === "recipients"
-                ? "border-emerald-500 text-emerald-400"
-                : "border-transparent text-slate-400 hover:text-slate-200"
-            }`}
+            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${activeTab === "recipients"
+              ? "border-emerald-500 text-emerald-400"
+              : "border-transparent text-slate-400 hover:text-slate-200"
+              }`}
           >
             <div className="flex flex-col items-center gap-1">
               <Users className="w-4 h-4" />
@@ -509,11 +507,10 @@ export default function QurbanCouponApp() {
           </button>
           <button
             onClick={() => setActiveTab("shohibul")}
-            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${
-              activeTab === "shohibul"
-                ? "border-emerald-500 text-emerald-400"
-                : "border-transparent text-slate-400 hover:text-slate-200"
-            }`}
+            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${activeTab === "shohibul"
+              ? "border-emerald-500 text-emerald-400"
+              : "border-transparent text-slate-400 hover:text-slate-200"
+              }`}
           >
             <div className="flex flex-col items-center gap-1">
               <BookOpen className="w-4 h-4" />
@@ -522,11 +519,10 @@ export default function QurbanCouponApp() {
           </button>
           <button
             onClick={() => setActiveTab("design")}
-            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${
-              activeTab === "design"
-                ? "border-emerald-500 text-emerald-400"
-                : "border-transparent text-slate-400 hover:text-slate-200"
-            }`}
+            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${activeTab === "design"
+              ? "border-emerald-500 text-emerald-400"
+              : "border-transparent text-slate-400 hover:text-slate-200"
+              }`}
           >
             <div className="flex flex-col items-center gap-1">
               <Palette className="w-4 h-4" />
@@ -664,21 +660,19 @@ export default function QurbanCouponApp() {
                 <div className="grid grid-cols-2 gap-2 bg-slate-900 p-1.5 rounded-lg border border-slate-700">
                   <button
                     onClick={() => setRecipientMode("blank")}
-                    className={`py-2 px-3 text-xs font-bold rounded-md transition-all ${
-                      recipientMode === "blank"
-                        ? "bg-emerald-600 text-white shadow-md"
-                        : "text-slate-400 hover:text-slate-200"
-                    }`}
+                    className={`py-2 px-3 text-xs font-bold rounded-md transition-all ${recipientMode === "blank"
+                      ? "bg-emerald-600 text-white shadow-md"
+                      : "text-slate-400 hover:text-slate-200"
+                      }`}
                   >
                     Kupon Kosong
                   </button>
                   <button
                     onClick={() => setRecipientMode("prefilled")}
-                    className={`py-2 px-3 text-xs font-bold rounded-md transition-all ${
-                      recipientMode === "prefilled"
-                        ? "bg-emerald-600 text-white shadow-md"
-                        : "text-slate-400 hover:text-slate-200"
-                    }`}
+                    className={`py-2 px-3 text-xs font-bold rounded-md transition-all ${recipientMode === "prefilled"
+                      ? "bg-emerald-600 text-white shadow-md"
+                      : "text-slate-400 hover:text-slate-200"
+                      }`}
                   >
                     Isi Otomatis
                   </button>
@@ -1067,11 +1061,10 @@ export default function QurbanCouponApp() {
                     <button
                       key={style}
                       onClick={() => setBorderStyle(style as any)}
-                      className={`py-2 px-3 rounded-lg border font-bold capitalize transition-all ${
-                        borderStyle === style
-                          ? "bg-emerald-600 border-emerald-500 text-white"
-                          : "bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200"
-                      }`}
+                      className={`py-2 px-3 rounded-lg border font-bold capitalize transition-all ${borderStyle === style
+                        ? "bg-emerald-600 border-emerald-500 text-white"
+                        : "bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200"
+                        }`}
                     >
                       {style === "double" ? "Ganda (Klasik)" : style}
                     </button>
@@ -1133,22 +1126,20 @@ export default function QurbanCouponApp() {
             <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-lg border border-slate-800">
               <button
                 onClick={() => setPreviewSingleId(null)}
-                className={`py-1 px-2.5 rounded text-xs font-bold transition-all ${
-                  previewSingleId === null
-                    ? "bg-slate-850 text-emerald-400 shadow-sm"
-                    : "text-slate-400 hover:text-slate-200"
-                }`}
+                className={`py-1 px-2.5 rounded text-xs font-bold transition-all ${previewSingleId === null
+                  ? "bg-slate-850 text-emerald-400 shadow-sm"
+                  : "text-slate-400 hover:text-slate-200"
+                  }`}
               >
                 Semua HVS A4
               </button>
               {totalCoupons > 0 && (
                 <button
                   onClick={() => setPreviewSingleId(1)}
-                  className={`py-1 px-2.5 rounded text-xs font-bold transition-all ${
-                    previewSingleId !== null
-                      ? "bg-slate-850 text-emerald-400 shadow-sm"
-                      : "text-slate-400 hover:text-slate-200"
-                  }`}
+                  className={`py-1 px-2.5 rounded text-xs font-bold transition-all ${previewSingleId !== null
+                    ? "bg-slate-850 text-emerald-400 shadow-sm"
+                    : "text-slate-400 hover:text-slate-200"
+                    }`}
                 >
                   Fokus 1 Kartu
                 </button>
@@ -1495,9 +1486,9 @@ function CouponCard({
         </div>
 
         {/* Shohibul list table 1 column */}
-        <div className="space-y-[1.5px] mt-1.5 max-h-[148px] overflow-y-auto pr-1">
+        <div className="space-y-[1.5px] mt-1.5  overflow-y-auto pr-1">
           {[...col1, ...col2].map((name, i) => (
-            <div key={i} className="text-[8.5px] font-bold flex items-start gap-1.5 leading-tight text-slate-800">
+            <div key={i} className="text-sm font-bold flex items-start gap-1.5 leading-tight text-slate-800">
               <span className="opacity-60 w-4 text-right flex-shrink-0">{i + 1}.</span>
               <span className="break-words whitespace-normal flex-1" title={name}>
                 {name}
