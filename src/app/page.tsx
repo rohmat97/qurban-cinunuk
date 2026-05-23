@@ -1494,30 +1494,16 @@ function CouponCard({
           {shohibulTitle}
         </div>
 
-        {/* Shohibul list table columns */}
-        <div className="grid grid-cols-2 gap-x-3 gap-y-[1px] mt-1.5 max-h-[148px] overflow-hidden">
-          {/* Column 1 */}
-          <div className="space-y-[0.5px]">
-            {col1.map((name, i) => (
-              <div key={i} className="text-[8.5px] font-bold flex items-start gap-1 leading-tight text-slate-800">
-                <span className="opacity-60">{i + 1}.</span>
-                <span className="break-words max-w-[110px] whitespace-normal" title={name}>
-                  {name}
-                </span>
-              </div>
-            ))}
-          </div>
-          {/* Column 2 */}
-          <div className="space-y-[0.5px]">
-            {col2.map((name, i) => (
-              <div key={i} className="text-[8.5px] font-bold flex items-start gap-1 leading-tight text-slate-800">
-                <span className="opacity-60">{col1.length + i + 1}.</span>
-                <span className="break-words max-w-[110px] whitespace-normal" title={name}>
-                  {name}
-                </span>
-              </div>
-            ))}
-          </div>
+        {/* Shohibul list table 1 column */}
+        <div className="space-y-[1.5px] mt-1.5 max-h-[148px] overflow-y-auto pr-1">
+          {[...col1, ...col2].map((name, i) => (
+            <div key={i} className="text-[8.5px] font-bold flex items-start gap-1.5 leading-tight text-slate-800">
+              <span className="opacity-60 w-4 text-right flex-shrink-0">{i + 1}.</span>
+              <span className="break-words whitespace-normal flex-1" title={name}>
+                {name}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
 
