@@ -61,194 +61,198 @@ export default function QurbanCouponApp() {
   // Generation Settings State
   const [recipientMode, setRecipientMode] = useState<"blank" | "prefilled">("prefilled");
   const [blankCount, setBlankCount] = useState(12); // Number of blank coupons (3 pages of 4)
-  const [recipientsText, setRecipientsText] = useState(
-    `BI APON
-BI ISOH
-CEP BALAN
-MANG AOM
-PIAH
-BI WATI
-CEU ODAH
-YAYAH ETI DEDI
-YAYAH PA TETEN
-CEU ROHAYA
-BI ANI
-PA IDI
-BU AI TIRAI
-NYAI
-DEDE ASIH
-UA TITI
-LILIS
-EVA/WOWO
-ACID
-IWAN
-EDI
-NENG SARAH
-CEU EMI
-UJANG
-DADANG
-ENJAH
-NENG JAJA
-BU IIS
-CEU IDA
-IMAS
-BI ILAH
-AJA
-IDA C. EUNCAS
-MANG ENTANG
-CEU ENGKON
-U. DOMRET
-UMAN
-NENG NAI
-ETET
-C. ENCAS
-MANG AMANG
-BI YATI
-ERNA
-BI EKAS
-ENENG
-ENUNG
-DEN WAWAN
-BI ISUR
-MANG OSO
-ABO
-UUH
-BU IMAS
-BU MIMAH
-BU IRAH
-PA H IMIN
-MANG YOYO
-RD RUHIYAT
-NENG CICI
-AI CEU TATI
-TINI
-IKEU
-OPIK
-CEU. NEUNEU
-UPI
-NENG ADIS
-BU HJ. ENTIN
-BU UKUN
-NENG RANI
-BU HJ TATIK
-MANG ADANG
-CEU ETI ODAH
-KIKI
-PA IDO
-TINAH
-BI ERAS
-YULI
-NINING
-SARI
-ENTI
-MANG KOMAR
-ENTUT
-CEU RODIAH
-CEU YUYU
-IDA
-KIKI/ATE
-NANI
-TATANG
-BU NENENG
-PA DADANG
-PA H. IDEN
-YADI K. ODAN
-MANAH
-CEU ATIK
-CUCU
-UCU
-NENG DERA
-YANI (M. SENA)
-NENG PRIDA
-BI EULIS
-NENG WULAN
-BU ATIN
-CEU ENOH
-DEWI
-NENG KINOY
-MA ONOH
-BI TIA
-MA DIAH
-AGUS
-PA AYEH
-JANG JETO
-DIDI
-MA II
-NENG API
-RITA
-H. ONENG
-UJANG
-H. ENCANG
-H. ENCENG
-EWANG
-MANG ANAN
-BI EMBOT
-NENENG
-PA ENDING
-BI EUNEUNG
-IFAN
-MAS WIWIN
-H. ALI
-ENDA
-UCU BEAS
-BI AAH
-JOIS
-GEUGEU
-MANG AMAN
-YATI
-NYAI CEU UNA
-LINA/ASEP
-UJANG (B. EPON)
-ONOH
-IMAS/EDI
-BI AI
-EUIS YUYU
-TATANG GAS
-EPI
-BI ADE
-AMOH
-BI OKOM
-BI TUTI
-BI ADE
-CEU SUMARNI
-CEU IYU
-BI WATI
-LUKI
-MANG ENDANG
-NANDANG
-MA DAIS
-ASKA
-MANG ENANG
-NENG DIAS
-BU AI
-ENDI
-BI OYOH
-UJANG DAWEU
-ANAH
-AMI
-AGUS CEU ENDE
-ALIT
-BU TITIN
-P. UJANG / SARAH
-ACANG
-BU WIWIN
-OOM
-BI DADAH
-NANO
-ADE BI ATIK
-BU PIAH
-DANDAN
-FERI
-BI KEUIS
-UTE
-DEDI
-IMAS YANTI
-HERU
-DADI / EEN
-AGUS BOBI
-NANDANG PANOONGAN
-MANG NANA CISARADAN`
-  );
+  const [recipients, setRecipients] = useState<string[]>([
+    "BI APON",
+    "BI ISOH",
+    "CEP BALAN",
+    "MANG AOM",
+    "PIAH",
+    "BI WATI",
+    "CEU ODAH",
+    "YAYAH ETI DEDI",
+    "YAYAH PA TETEN",
+    "CEU ROHAYA",
+    "BI ANI",
+    "PA IDI",
+    "BU AI TIRAI",
+    "NYAI",
+    "DEDE ASIH",
+    "UA TITI",
+    "LILIS",
+    "EVA/WOWO",
+    "ACID",
+    "IWAN",
+    "EDI",
+    "NENG SARAH",
+    "CEU EMI",
+    "UJANG",
+    "DADANG",
+    "ENJAH",
+    "NENG JAJA",
+    "BU IIS",
+    "CEU IDA",
+    "IMAS",
+    "BI ILAH",
+    "AJA",
+    "IDA C. EUNCAS",
+    "MANG ENTANG",
+    "CEU ENGKON",
+    "U. DOMRET",
+    "UMAN",
+    "NENG NAI",
+    "ETET",
+    "C. ENCAS",
+    "MANG AMANG",
+    "BI YATI",
+    "ERNA",
+    "BI EKAS",
+    "ENENG",
+    "ENUNG",
+    "DEN WAWAN",
+    "BI ISUR",
+    "MANG OSO",
+    "ABO",
+    "UUH",
+    "BU IMAS",
+    "BU MIMAH",
+    "BU IRAH",
+    "PA H IMIN",
+    "MANG YOYO",
+    "RD RUHIYAT",
+    "NENG CICI",
+    "AI CEU TATI",
+    "TINI",
+    "IKEU",
+    "OPIK",
+    "CEU. NEUNEU",
+    "UPI",
+    "NENG ADIS",
+    "BU HJ. ENTIN",
+    "BU UKUN",
+    "NENG RANI",
+    "BU HJ TATIK",
+    "MANG ADANG",
+    "CEU ETI ODAH",
+    "KIKI",
+    "PA IDO",
+    "TINAH",
+    "BI ERAS",
+    "YULI",
+    "NINING",
+    "SARI",
+    "ENTI",
+    "MANG KOMAR",
+    "ENTUT",
+    "CEU RODIAH",
+    "CEU YUYU",
+    "IDA",
+    "KIKI/ATE",
+    "NANI",
+    "TATANG",
+    "BU NENENG",
+    "PA DADANG",
+    "PA H. IDEN",
+    "YADI K. ODAN",
+    "MANAH",
+    "CEU ATIK",
+    "CUCU",
+    "UCU",
+    "NENG DERA",
+    "YANI (M. SENA)",
+    "NENG PRIDA",
+    "BI EULIS",
+    "NENG WULAN",
+    "BU ATIN",
+    "CEU ENOH",
+    "DEWI",
+    "NENG KINOY",
+    "MA ONOH",
+    "BI TIA",
+    "MA DIAH",
+    "AGUS",
+    "PA AYEH",
+    "JANG JETO",
+    "DIDI",
+    "MA II",
+    "NENG API",
+    "RITA",
+    "H. ONENG",
+    "UJANG",
+    "H. ENCANG",
+    "H. ENCENG",
+    "EWANG",
+    "MANG ANAN",
+    "BI EMBOT",
+    "NENENG",
+    "PA ENDING",
+    "BI EUNEUNG",
+    "IFAN",
+    "MAS WIWIN",
+    "H. ALI",
+    "ENDA",
+    "UCU BEAS",
+    "BI AAH",
+    "JOIS",
+    "GEUGEU",
+    "MANG AMAN",
+    "YATI",
+    "NYAI CEU UNA",
+    "LINA/ASEP",
+    "UJANG (B. EPON)",
+    "ONOH",
+    "IMAS/EDI",
+    "BI AI",
+    "EUIS YUYU",
+    "TATANG GAS",
+    "EPI",
+    "BI ADE",
+    "AMOH",
+    "BI OKOM",
+    "BI TUTI",
+    "BI ADE",
+    "CEU SUMARNI",
+    "CEU IYU",
+    "BI WATI",
+    "LUKI",
+    "MANG ENDANG",
+    "NANDANG",
+    "MA DAIS",
+    "ASKA",
+    "MANG ENANG",
+    "NENG DIAS",
+    "BU AI",
+    "ENDI",
+    "BI OYOH",
+    "UJANG DAWEU",
+    "ANAH",
+    "AMI",
+    "AGUS CEU ENDE",
+    "ALIT",
+    "BU TITIN",
+    "P. UJANG / SARAH",
+    "ACANG",
+    "BU WIWIN",
+    "OOM",
+    "BI DADAH",
+    "NANO",
+    "ADE BI ATIK",
+    "BU PIAH",
+    "DANDAN",
+    "FERI",
+    "BI KEUIS",
+    "UTE",
+    "DEDI",
+    "IMAS YANTI",
+    "HERU",
+    "DADI / EEN",
+    "AGUS BOBI",
+    "NANDANG PANOONGAN",
+    "MANG NANA CISARADAN"
+  ]);
+  const [newRecipient, setNewRecipient] = useState("");
+  const [searchRecipient, setSearchRecipient] = useState("");
+  const [showBulkRecipients, setShowBulkRecipients] = useState(false);
+  const [recipientsTextarea, setRecipientsTextarea] = useState("");
   const [numberPrefix, setNumberPrefix] = useState("Q-");
   const [numberStart, setNumberStart] = useState(1);
   const [numberPad, setNumberPad] = useState(3); // e.g. 001
@@ -379,14 +383,53 @@ MANG NANA CISARADAN`
     ]);
   };
 
-  // Parse recipients list
-  const recipients = useMemo(() => {
-    if (recipientMode === "blank") return [];
-    return recipientsText
-      .split("\n")
-      .map((name) => name.trim())
-      .filter((name) => name.length > 0);
-  }, [recipientsText, recipientMode]);
+  // Recipients operations
+  const addRecipient = () => {
+    if (newRecipient.trim()) {
+      setRecipients([...recipients, newRecipient.trim()]);
+      setNewRecipient("");
+    }
+  };
+
+  const removeRecipient = (index: number) => {
+    const newList = [...recipients];
+    newList.splice(index, 1);
+    setRecipients(newList);
+  };
+
+  const handleBulkRecipients = () => {
+    if (recipientsTextarea.trim()) {
+      const names = recipientsTextarea
+        .split(/[\n,]/)
+        .map((name) => name.trim())
+        .filter((name) => name.length > 0);
+      setRecipients(names);
+      setRecipientsTextarea("");
+      setShowBulkRecipients(false);
+    }
+  };
+
+  const openBulkRecipients = () => {
+    setRecipientsTextarea(recipients.join("\n"));
+    setShowBulkRecipients(true);
+  };
+
+  const clearRecipients = () => {
+    if (confirm("Apakah Anda yakin ingin menghapus semua nama Penerima?")) {
+      setRecipients([]);
+    }
+  };
+
+  // Search filtered recipients with original index tracking
+  const filteredRecipients = useMemo(() => {
+    if (!searchRecipient.trim()) {
+      return recipients.map((name, index) => ({ name, originalIndex: index }));
+    }
+    const term = searchRecipient.toLowerCase();
+    return recipients
+      .map((name, index) => ({ name, originalIndex: index }))
+      .filter((item) => item.name.toLowerCase().includes(term));
+  }, [recipients, searchRecipient]);
 
   // Total coupons to generate
   const totalCoupons = useMemo(() => {
@@ -613,7 +656,7 @@ MANG NANA CISARADAN`
             </div>
           )}
 
-          {/* TAB 2: RECIPIENTS MODE & BULK GENERATION */}
+          {/* TAB 2: RECIPIENTS MODE & INTERACTIVE TO-DO LIST */}
           {activeTab === "recipients" && (
             <div className="space-y-4 animate-fadeIn">
               <div>
@@ -675,26 +718,131 @@ MANG NANA CISARADAN`
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-slate-900 rounded-xl p-4 border border-slate-700/60 space-y-3">
-                    <h4 className="text-sm font-bold text-slate-200 flex items-center gap-2">
-                      <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
-                      Daftar Nama Penerima
-                    </h4>
-                    <p className="text-xs text-slate-400">
-                      Tulis atau tempel nama penerima (1 nama per baris). Kupon akan langsung terbuat dengan nama tercetak rapi!
-                    </p>
-                    <textarea
-                      value={recipientsText}
-                      onChange={(e) => setRecipientsText(e.target.value)}
-                      rows={8}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-300 focus:outline-none focus:border-emerald-500 leading-normal"
-                      placeholder="Contoh:&#10;Pak Ahmad&#10;Ibu Fatimah&#10;Pak Joko"
-                    />
-                    <div className="flex justify-between items-center text-xs text-slate-400 font-medium">
-                      <span>Total Penerima: <strong className="text-emerald-400">{recipients.length}</strong> orang</span>
-                      <span>Total HVS A4: <strong className="text-emerald-400">{totalPages}</strong> lembar</span>
+                  {/* Interactive Todo list header */}
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      Daftar Penerima ({recipients.length})
+                    </label>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => showBulkRecipients ? setShowBulkRecipients(false) : openBulkRecipients()}
+                        className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-950/40 px-2 py-1 rounded border border-emerald-900"
+                      >
+                        {showBulkRecipients ? "Batal" : "Tambah Banyak"}
+                      </button>
+                      {!showBulkRecipients && (
+                        <button
+                          onClick={clearRecipients}
+                          className="text-[10px] text-rose-400 hover:text-rose-300 font-bold bg-rose-950/40 px-2 py-1 rounded border border-rose-900/30"
+                        >
+                          Hapus Semua
+                        </button>
+                      )}
                     </div>
                   </div>
+
+                  {showBulkRecipients ? (
+                    <div className="bg-slate-900 p-4 rounded-xl border border-slate-700/60 space-y-3">
+                      <h5 className="text-xs font-bold text-slate-300">Impor Banyak Penerima</h5>
+                      <p className="text-[11px] text-slate-500">
+                        Masukkan nama penerima yang dipisahkan dengan koma atau baris baru.
+                      </p>
+                      <textarea
+                        value={recipientsTextarea}
+                        onChange={(e) => setRecipientsTextarea(e.target.value)}
+                        rows={6}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 leading-normal font-mono"
+                        placeholder="Contoh:&#10;Pak Ahmad&#10;Ibu Fatimah&#10;Pak Joko"
+                      />
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          onClick={() => setShowBulkRecipients(false)}
+                          className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 font-bold rounded"
+                        >
+                          Batal
+                        </button>
+                        <button
+                          onClick={handleBulkRecipients}
+                          className="px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 font-bold text-white rounded shadow-md"
+                        >
+                          Simpan List
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {/* Quick Add Recipient Form */}
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newRecipient}
+                          onChange={(e) => setNewRecipient(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && addRecipient()}
+                          className="flex-1 bg-slate-900 border border-slate-700 rounded-lg py-1.5 px-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                          placeholder="Masukkan nama penerima baru..."
+                        />
+                        <button
+                          onClick={addRecipient}
+                          className="p-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors flex items-center justify-center"
+                          title="Tambah Penerima"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* Recipient Search Filter */}
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={searchRecipient}
+                          onChange={(e) => setSearchRecipient(e.target.value)}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-lg py-1.5 px-3 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-emerald-600"
+                          placeholder="Cari nama penerima kurban..."
+                        />
+                        {searchRecipient && (
+                          <button
+                            onClick={() => setSearchRecipient("")}
+                            className="absolute right-2.5 top-2.5 text-[10px] text-slate-500 hover:text-slate-300 font-bold"
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Interactive todo list of current names */}
+                      <div className="bg-slate-900 rounded-xl border border-slate-700/60 max-h-96 overflow-y-auto divide-y divide-slate-800/60">
+                        {filteredRecipients.length === 0 ? (
+                          <div className="p-6 text-center text-xs text-slate-500">
+                            {searchRecipient ? "Nama tidak ditemukan." : "Belum ada nama penerima kurban."}
+                          </div>
+                        ) : (
+                          filteredRecipients.map((item) => (
+                            <div key={item.originalIndex} className="flex justify-between items-center p-2.5 hover:bg-slate-850/80 group transition-colors">
+                              <span className="text-xs text-slate-300 font-medium truncate max-w-[280px]">
+                                <span className="text-[10px] font-mono text-slate-500 mr-1.5">
+                                  #{item.originalIndex + 1}
+                                </span>
+                                {item.name}
+                              </span>
+                              <button
+                                onClick={() => removeRecipient(item.originalIndex)}
+                                className="p-1 text-slate-500 hover:text-rose-400 hover:bg-rose-950/20 rounded opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all flex items-center justify-center cursor-pointer"
+                                title={`Hapus ${item.name}`}
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+
+                      {/* Meta information summary */}
+                      <div className="flex justify-between items-center text-[10.5px] text-slate-400 font-medium px-1 bg-slate-950/20 p-2 rounded-lg border border-slate-800/40">
+                        <span>Total: <strong className="text-emerald-400">{recipients.length}</strong> orang</span>
+                        <span>Total Kertas: <strong className="text-emerald-400">{totalPages}</strong> HVS A4</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
