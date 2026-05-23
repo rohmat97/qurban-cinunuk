@@ -57,7 +57,7 @@ body {
   header,
   nav,
   button,
-  .no-print-bg {
+  .no-print-element {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
@@ -74,13 +74,25 @@ body {
     margin: 0 !important;
     padding: 0 !important;
     overflow: visible !important;
+    height: auto !important;
   }
 
+  /* Reset main wrapper styles to prevent clipping and hidden elements */
+  .no-print-bg,
+  main,
   .print-scroll-container {
-    overflow: visible !important;
-    padding: 0 !important;
-    margin: 0 !important;
     display: block !important;
+    position: static !important;
+    width: 210mm !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
   }
 
   /* Reset scale and zoom transforms during printing */
