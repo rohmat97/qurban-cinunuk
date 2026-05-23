@@ -59,10 +59,195 @@ export default function QurbanCouponApp() {
   const [footerText, setFooterText] = useState("*Harap membawa kupon ini saat pengambilan daging. Jazakumullah Khair.");
 
   // Generation Settings State
-  const [recipientMode, setRecipientMode] = useState<"blank" | "prefilled">("blank");
+  const [recipientMode, setRecipientMode] = useState<"blank" | "prefilled">("prefilled");
   const [blankCount, setBlankCount] = useState(12); // Number of blank coupons (3 pages of 4)
   const [recipientsText, setRecipientsText] = useState(
-    "Pak Ahmad Dahlan\nIbu Siti Fatimah\nPak Joko Wahyudi\nIbu Aminah Yusuf\nPak Budi Hartono\nIbu Sri Wahyuni\nPak Hendra Wijaya\nIbu Lilis Suryani\nPak Agus Hermawan\nIbu Rina Kartika\nPak Cecep Supriatna\nIbu Dedeh Rosidah"
+    `BI APON
+BI ISOH
+CEP BALAN
+MANG AOM
+PIAH
+BI WATI
+CEU ODAH
+YAYAH ETI DEDI
+YAYAH PA TETEN
+CEU ROHAYA
+BI ANI
+PA IDI
+BU AI TIRAI
+NYAI
+DEDE ASIH
+UA TITI
+LILIS
+EVA/WOWO
+ACID
+IWAN
+EDI
+NENG SARAH
+CEU EMI
+UJANG
+DADANG
+ENJAH
+NENG JAJA
+BU IIS
+CEU IDA
+IMAS
+BI ILAH
+AJA
+IDA C. EUNCAS
+MANG ENTANG
+CEU ENGKON
+U. DOMRET
+UMAN
+NENG NAI
+ETET
+C. ENCAS
+MANG AMANG
+BI YATI
+ERNA
+BI EKAS
+ENENG
+ENUNG
+DEN WAWAN
+BI ISUR
+MANG OSO
+ABO
+UUH
+BU IMAS
+BU MIMAH
+BU IRAH
+PA H IMIN
+MANG YOYO
+RD RUHIYAT
+NENG CICI
+AI CEU TATI
+TINI
+IKEU
+OPIK
+CEU. NEUNEU
+UPI
+NENG ADIS
+BU HJ. ENTIN
+BU UKUN
+NENG RANI
+BU HJ TATIK
+MANG ADANG
+CEU ETI ODAH
+KIKI
+PA IDO
+TINAH
+BI ERAS
+YULI
+NINING
+SARI
+ENTI
+MANG KOMAR
+ENTUT
+CEU RODIAH
+CEU YUYU
+IDA
+KIKI/ATE
+NANI
+TATANG
+BU NENENG
+PA DADANG
+PA H. IDEN
+YADI K. ODAN
+MANAH
+CEU ATIK
+CUCU
+UCU
+NENG DERA
+YANI (M. SENA)
+NENG PRIDA
+BI EULIS
+NENG WULAN
+BU ATIN
+CEU ENOH
+DEWI
+NENG KINOY
+MA ONOH
+BI TIA
+MA DIAH
+AGUS
+PA AYEH
+JANG JETO
+DIDI
+MA II
+NENG API
+RITA
+H. ONENG
+UJANG
+H. ENCANG
+H. ENCENG
+EWANG
+MANG ANAN
+BI EMBOT
+NENENG
+PA ENDING
+BI EUNEUNG
+IFAN
+MAS WIWIN
+H. ALI
+ENDA
+UCU BEAS
+BI AAH
+JOIS
+GEUGEU
+MANG AMAN
+YATI
+NYAI CEU UNA
+LINA/ASEP
+UJANG (B. EPON)
+ONOH
+IMAS/EDI
+BI AI
+EUIS YUYU
+TATANG GAS
+EPI
+BI ADE
+AMOH
+BI OKOM
+BI TUTI
+BI ADE
+CEU SUMARNI
+CEU IYU
+BI WATI
+LUKI
+MANG ENDANG
+NANDANG
+MA DAIS
+ASKA
+MANG ENANG
+NENG DIAS
+BU AI
+ENDI
+BI OYOH
+UJANG DAWEU
+ANAH
+AMI
+AGUS CEU ENDE
+ALIT
+BU TITIN
+P. UJANG / SARAH
+ACANG
+BU WIWIN
+OOM
+BI DADAH
+NANO
+ADE BI ATIK
+BU PIAH
+DANDAN
+FERI
+BI KEUIS
+UTE
+DEDI
+IMAS YANTI
+HERU
+DADI / EEN
+AGUS BOBI
+NANDANG PANOONGAN
+MANG NANA CISARADAN`
   );
   const [numberPrefix, setNumberPrefix] = useState("Q-");
   const [numberStart, setNumberStart] = useState(1);
