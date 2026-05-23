@@ -1501,7 +1501,7 @@ function CouponCard({
             {col1.map((name, i) => (
               <div key={i} className="text-[8.5px] font-bold flex items-start gap-1 leading-tight text-slate-800">
                 <span className="opacity-60">{i + 1}.</span>
-                <span className="truncate max-w-[110px]" title={name}>
+                <span className="break-words max-w-[110px] whitespace-normal" title={name}>
                   {name}
                 </span>
               </div>
@@ -1512,7 +1512,7 @@ function CouponCard({
             {col2.map((name, i) => (
               <div key={i} className="text-[8.5px] font-bold flex items-start gap-1 leading-tight text-slate-800">
                 <span className="opacity-60">{col1.length + i + 1}.</span>
-                <span className="truncate max-w-[110px]" title={name}>
+                <span className="break-words max-w-[110px] whitespace-normal" title={name}>
                   {name}
                 </span>
               </div>
