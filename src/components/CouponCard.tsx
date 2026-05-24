@@ -52,9 +52,10 @@ export default function CouponCard({
   };
 
   const totalNames = col1.length + col2.length;
-  // Calculate dynamic font size and vertical gap based on number of names to perfectly fill the space
-  const dynamicFontSize = `${Math.max(11, Math.min(16, 14.5 - totalNames * 0.5))}px`;
-  const dynamicGap = `${Math.max(2, Math.min(8, 10 - totalNames * 0.55))}px`;
+  // Calculate dynamic font size and vertical gap based on number of names to perfectly fill the space.
+  // We lower the minimum cap from 11px to 8.5px to ensure larger lists (like 14 names) fit perfectly in 1 column without pushing the footer out!
+  const dynamicFontSize = `${Math.max(8.5, Math.min(15, 14.2 - totalNames * 0.45))}px`;
+  const dynamicGap = `${Math.max(1.5, Math.min(8, 9 - totalNames * 0.5))}px`;
 
   return (
     <div
@@ -93,7 +94,7 @@ export default function CouponCard({
 
       {/* DECORATIVE SEPARATOR */}
       <div
-        className="w-full my-2"
+        className="w-full my-1"
         style={{
           borderTop: `1px dashed ${primaryColor}`,
           opacity: 0.8
@@ -101,10 +102,10 @@ export default function CouponCard({
       />
 
       {/* RECIPIENT INFORMATION (DYNAMIC FILL OR BLANK DOTTED) */}
-      <div className="space-y-1.5 py-1">
+      <div className="space-y-1 py-0.5">
         {recipientName ? (
           /* Auto-filled Mode Display */
-          <div className="space-y-1 bg-slate-500/5 p-2 rounded border border-slate-300/20">
+          <div className="space-y-0.5 bg-slate-500/5 p-2 rounded border border-slate-300/20">
             <div className="flex items-center text-[10.5px]">
               <span className="w-16 font-extrabold opacity-75">NO. KUPON</span>
               <span className="mx-1 font-bold">:</span>
@@ -152,7 +153,7 @@ export default function CouponCard({
 
       {/* EVENT LOGISTICS META */}
       <div
-        className="flex justify-between items-center py-1.5 px-2.5 rounded font-extrabold my-2 text-[9.5px]"
+        className="flex justify-between items-center py-1 px-2.5 rounded font-extrabold my-1 text-[9.5px]"
         style={{
           backgroundColor: `${primaryColor}15`,
           color: primaryColor
@@ -183,7 +184,7 @@ export default function CouponCard({
 
         {/* Shohibul list table 1 column */}
         <div
-          className="mt-1.5 overflow-y-auto pr-1 flex-1 flex flex-col justify-start"
+          className="mt-1 overflow-y-auto pr-1 flex-1 flex flex-col justify-start"
           style={{ gap: dynamicGap }}
         >
           {[...col1, ...col2].map((name, i) => (
@@ -203,7 +204,7 @@ export default function CouponCard({
 
       {/* FOOTER */}
       <div
-        className="text-[8.5px] text-center font-bold italic mt-3 pt-2 opacity-80"
+        className="text-[8.5px] text-center font-bold italic mt-1.5 pt-1 opacity-80"
         style={{
           borderTop: "1px solid #dddddd",
           color: "#444444"
