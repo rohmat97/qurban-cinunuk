@@ -29,6 +29,9 @@ import {
 import { createClient } from "../utils/supabase/client";
 import CouponCard from "../components/CouponCard";
 import { DEFAULT_SHOHIBUL, DEFAULT_RECIPIENTS, COLOR_PRESETS } from "../constants/defaults";
+import InfoTab from "../components/tabs/InfoTab";
+import RecipientsTab from "../components/tabs/RecipientsTab";
+import ShohibulTab from "../components/tabs/ShohibulTab";
 
 export default function QurbanCouponApp() {
   // Shohibul Qurban Family List State
@@ -444,420 +447,71 @@ export default function QurbanCouponApp() {
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {/* TAB 1: GENERAL INFO CONTENT */}
           {activeTab === "content" && (
-            <div className="space-y-4 animate-fadeIn">
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Judul Kupon</label>
-                <input
-                  type="text"
-                  value={eventTitle}
-                  onChange={(e) => setEventTitle(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
-                  placeholder="Kupon Daging Qurban"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Sub-judul / Tahun</label>
-                <input
-                  type="text"
-                  value={eventSub}
-                  onChange={(e) => setEventSub(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
-                  placeholder="Eid Al-Adha 1447 H / 2026 M"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">📅 Tanggal</label>
-                  <input
-                    type="text"
-                    value={eventDate}
-                    onChange={(e) => setEventDate(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
-                    placeholder="📅 Mei 2026"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">🕒 Waktu</label>
-                  <input
-                    type="text"
-                    value={eventTime}
-                    onChange={(e) => setEventTime(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
-                    placeholder="🕒 08.00 - Selesai"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">📍 Lokasi Pengambilan</label>
-                <input
-                  type="text"
-                  value={eventLoc}
-                  onChange={(e) => setEventLoc(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
-                  placeholder="📍 Area Keluarga"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Header Box Shohibul</label>
-                <input
-                  type="text"
-                  value={shohibulTitle}
-                  onChange={(e) => setShohibulTitle(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
-                  placeholder="Shohibul Kurban..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Catatan Kaki (Footer)</label>
-                <textarea
-                  value={footerText}
-                  onChange={(e) => setFooterText(e.target.value)}
-                  rows={2}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 resize-none"
-                  placeholder="*Harap membawa kupon ini..."
-                />
-              </div>
-
-              <div className="bg-slate-700/30 p-4 rounded-xl border border-slate-700">
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <Sliders className="w-3.5 h-3.5 text-emerald-400" />
-                  Format Penomoran
-                </h4>
-                <div className="grid grid-cols-3 gap-2">
-                  <div>
-                    <label className="block text-[10px] text-slate-400 font-bold mb-1">Prefix</label>
-                    <input
-                      type="text"
-                      value={numberPrefix}
-                      onChange={(e) => setNumberPrefix(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded py-1 px-2 text-xs text-slate-200 text-center"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] text-slate-400 font-bold mb-1">Mulai</label>
-                    <input
-                      type="number"
-                      value={numberStart}
-                      onChange={(e) => setNumberStart(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="w-full bg-slate-900 border border-slate-700 rounded py-1 px-2 text-xs text-slate-200 text-center"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] text-slate-400 font-bold mb-1">Digit</label>
-                    <input
-                      type="number"
-                      value={numberPad}
-                      onChange={(e) => setNumberPad(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="w-full bg-slate-900 border border-slate-700 rounded py-1 px-2 text-xs text-slate-200 text-center"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <InfoTab
+              eventTitle={eventTitle}
+              setEventTitle={setEventTitle}
+              eventSub={eventSub}
+              setEventSub={setEventSub}
+              eventDate={eventDate}
+              setEventDate={setEventDate}
+              eventTime={eventTime}
+              setEventTime={setEventTime}
+              eventLoc={eventLoc}
+              setEventLoc={setEventLoc}
+              shohibulTitle={shohibulTitle}
+              setShohibulTitle={setShohibulTitle}
+              footerText={footerText}
+              setFooterText={setFooterText}
+              numberPrefix={numberPrefix}
+              setNumberPrefix={setNumberPrefix}
+              numberStart={numberStart}
+              setNumberStart={setNumberStart}
+              numberPad={numberPad}
+              setNumberPad={setNumberPad}
+            />
           )}
 
           {/* TAB 2: RECIPIENTS MODE & INTERACTIVE TO-DO LIST */}
           {activeTab === "recipients" && (
-            <div className="space-y-4 animate-fadeIn">
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Metode Penerima</label>
-                <div className="grid grid-cols-2 gap-2 bg-slate-900 p-1.5 rounded-lg border border-slate-700">
-                  <button
-                    onClick={() => setRecipientMode("blank")}
-                    className={`py-2 px-3 text-xs font-bold rounded-md transition-all ${recipientMode === "blank"
-                      ? "bg-emerald-600 text-white shadow-md"
-                      : "text-slate-400 hover:text-slate-200"
-                      }`}
-                  >
-                    Kupon Kosong
-                  </button>
-                  <button
-                    onClick={() => setRecipientMode("prefilled")}
-                    className={`py-2 px-3 text-xs font-bold rounded-md transition-all ${recipientMode === "prefilled"
-                      ? "bg-emerald-600 text-white shadow-md"
-                      : "text-slate-400 hover:text-slate-200"
-                      }`}
-                  >
-                    Isi Otomatis
-                  </button>
-                </div>
-              </div>
-
-              {recipientMode === "blank" ? (
-                <div className="space-y-3 p-4 bg-slate-900 rounded-xl border border-slate-700/60">
-                  <h4 className="text-sm font-bold text-slate-200 flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-emerald-400" />
-                    Atur Jumlah Cetak
-                  </h4>
-                  <p className="text-xs text-slate-400">
-                    Cetak kupon kosong dengan kolom Nama & No Kupon bertitik-titik untuk ditulis manual dengan pulpen.
-                  </p>
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-400 mb-1">Jumlah Kupon Kosong</label>
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="range"
-                        min="4"
-                        max="100"
-                        step="4"
-                        value={blankCount}
-                        onChange={(e) => setBlankCount(parseInt(e.target.value))}
-                        className="flex-1 accent-emerald-500"
-                      />
-                      <span className="font-mono text-emerald-400 text-sm font-bold bg-slate-950 px-2.5 py-1 rounded border border-slate-800">
-                        {blankCount} pcs
-                      </span>
-                    </div>
-                    <div className="text-[10px] text-slate-500 mt-1.5 flex justify-between">
-                      <span>Min: 4 (1 Lembar HVS)</span>
-                      <span>Setara: {Math.ceil(blankCount / 4)} HVS</span>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {/* Interactive Todo list header */}
-                  <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                      Daftar Penerima ({recipients.length})
-                    </label>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => showBulkRecipients ? setShowBulkRecipients(false) : openBulkRecipients()}
-                        className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-950/40 px-2 py-1 rounded border border-emerald-900"
-                      >
-                        {showBulkRecipients ? "Batal" : "Tambah Banyak"}
-                      </button>
-                      {!showBulkRecipients && (
-                        <button
-                          onClick={clearRecipients}
-                          className="text-[10px] text-rose-400 hover:text-rose-300 font-bold bg-rose-950/40 px-2 py-1 rounded border border-rose-900/30"
-                        >
-                          Hapus Semua
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  {showBulkRecipients ? (
-                    <div className="bg-slate-900 p-4 rounded-xl border border-slate-700/60 space-y-3">
-                      <h5 className="text-xs font-bold text-slate-300">Impor Banyak Penerima</h5>
-                      <p className="text-[11px] text-slate-500">
-                        Masukkan nama penerima yang dipisahkan dengan koma atau baris baru.
-                      </p>
-                      <textarea
-                        value={recipientsTextarea}
-                        onChange={(e) => setRecipientsTextarea(e.target.value)}
-                        rows={6}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 leading-normal font-mono"
-                        placeholder="Contoh:&#10;Pak Ahmad&#10;Ibu Fatimah&#10;Pak Joko"
-                      />
-                      <div className="flex gap-2 justify-end">
-                        <button
-                          onClick={() => setShowBulkRecipients(false)}
-                          className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 font-bold rounded"
-                        >
-                          Batal
-                        </button>
-                        <button
-                          onClick={handleBulkRecipients}
-                          className="px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 font-bold text-white rounded shadow-md"
-                        >
-                          Simpan List
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {/* Quick Add Recipient Form */}
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={newRecipient}
-                          onChange={(e) => setNewRecipient(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && addRecipient()}
-                          className="flex-1 bg-slate-900 border border-slate-700 rounded-lg py-1.5 px-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-                          placeholder="Masukkan nama penerima baru..."
-                        />
-                        <button
-                          onClick={addRecipient}
-                          className="p-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors flex items-center justify-center"
-                          title="Tambah Penerima"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-                      </div>
-
-                      {/* Recipient Search Filter */}
-                      <div className="relative">
-                        <input
-                          type="text"
-                          value={searchRecipient}
-                          onChange={(e) => setSearchRecipient(e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-800 rounded-lg py-1.5 px-3 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-emerald-600"
-                          placeholder="Cari nama penerima kurban..."
-                        />
-                        {searchRecipient && (
-                          <button
-                            onClick={() => setSearchRecipient("")}
-                            className="absolute right-2.5 top-2.5 text-[10px] text-slate-500 hover:text-slate-300 font-bold"
-                          >
-                            Clear
-                          </button>
-                        )}
-                      </div>
-
-                      {/* Interactive todo list of current names */}
-                      <div className="bg-slate-900 rounded-xl border border-slate-700/60 max-h-96 overflow-y-auto divide-y divide-slate-800/60">
-                        {filteredRecipients.length === 0 ? (
-                          <div className="p-6 text-center text-xs text-slate-500">
-                            {searchRecipient ? "Nama tidak ditemukan." : "Belum ada nama penerima kurban."}
-                          </div>
-                        ) : (
-                          filteredRecipients.map((item) => (
-                            <div key={item.originalIndex} className="flex justify-between items-center p-2.5 hover:bg-slate-850/80 group transition-colors">
-                              <span className="text-xs text-slate-300 font-medium truncate max-w-[280px]">
-                                <span className="text-[10px] font-mono text-slate-500 mr-1.5">
-                                  #{item.originalIndex + 1}
-                                </span>
-                                {item.name}
-                              </span>
-                              <button
-                                onClick={() => removeRecipient(item.originalIndex)}
-                                className="p-1 text-slate-500 hover:text-rose-400 hover:bg-rose-950/20 rounded opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all flex items-center justify-center cursor-pointer"
-                                title={`Hapus ${item.name}`}
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          ))
-                        )}
-                      </div>
-
-                      {/* Meta information summary */}
-                      <div className="flex justify-between items-center text-[10.5px] text-slate-400 font-medium px-1 bg-slate-950/20 p-2 rounded-lg border border-slate-800/40">
-                        <span>Total: <strong className="text-emerald-400">{recipients.length}</strong> orang</span>
-                        <span>Total Kertas: <strong className="text-emerald-400">{totalPages}</strong> HVS A4</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+            <RecipientsTab
+              recipientMode={recipientMode}
+              setRecipientMode={setRecipientMode}
+              blankCount={blankCount}
+              setBlankCount={setBlankCount}
+              recipients={recipients}
+              newRecipient={newRecipient}
+              setNewRecipient={setNewRecipient}
+              searchRecipient={searchRecipient}
+              setSearchRecipient={setSearchRecipient}
+              showBulkRecipients={showBulkRecipients}
+              setShowBulkRecipients={setShowBulkRecipients}
+              recipientsTextarea={recipientsTextarea}
+              setRecipientsTextarea={setRecipientsTextarea}
+              addRecipient={addRecipient}
+              removeRecipient={removeRecipient}
+              handleBulkRecipients={handleBulkRecipients}
+              openBulkRecipients={openBulkRecipients}
+              clearRecipients={clearRecipients}
+              totalPages={totalPages}
+            />
           )}
 
           {/* TAB 3: SHOHIBUL LIST MANAGER */}
           {activeTab === "shohibul" && (
-            <div className="space-y-4 animate-fadeIn">
-              <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Daftar Shohibul ({shohibulList.length})
-                </label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setShowBulkShohibul(!showBulkShohibul)}
-                    className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-950/40 px-2 py-1 rounded border border-emerald-900"
-                  >
-                    {showBulkShohibul ? "Kembali" : "Tambah Banyak"}
-                  </button>
-                  <button
-                    onClick={resetShohibulDefault}
-                    className="text-[10px] text-slate-400 hover:text-slate-200 font-semibold"
-                    title="Kembalikan ke list default H. Umar Sumarya"
-                  >
-                    Reset Default
-                  </button>
-                </div>
-              </div>
-
-              {showBulkShohibul ? (
-                <div className="bg-slate-900 p-4 rounded-xl border border-slate-700/60 space-y-3">
-                  <h5 className="text-xs font-bold text-slate-300">Tambah Banyak Shohibul</h5>
-                  <p className="text-[11px] text-slate-500">
-                    Masukkan nama yang dipisahkan dengan koma atau baris baru.
-                  </p>
-                  <textarea
-                    value={shohibulTextarea}
-                    onChange={(e) => setShohibulTextarea(e.target.value)}
-                    rows={4}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none"
-                    placeholder="Een Sumarni, Rizal Nugraha, Ade Maryati"
-                  />
-                  <div className="flex gap-2 justify-end">
-                    <button
-                      onClick={() => setShowBulkShohibul(false)}
-                      className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 font-bold rounded"
-                    >
-                      Batal
-                    </button>
-                    <button
-                      onClick={handleBulkShohibul}
-                      className="px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 font-bold text-white rounded shadow"
-                    >
-                      Impor
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {/* Quick Add */}
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newShohibul}
-                      onChange={(e) => setNewShohibul(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && addShohibul()}
-                      className="flex-1 bg-slate-900 border border-slate-700 rounded-lg py-1.5 px-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none"
-                      placeholder="Masukkan nama shohibul..."
-                    />
-                    <button
-                      onClick={addShohibul}
-                      className="p-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* List of current names */}
-                  <div className="bg-slate-900 rounded-xl border border-slate-700/60 max-h-72 overflow-y-auto divide-y divide-slate-800">
-                    {shohibulList.length === 0 ? (
-                      <div className="p-6 text-center text-xs text-slate-500">
-                        Belum ada nama shohibul. Tambahkan di atas!
-                      </div>
-                    ) : (
-                      shohibulList.map((name, i) => (
-                        <div key={i} className="flex justify-between items-center p-2.5 hover:bg-slate-800/50 group">
-                          <span className="text-xs text-slate-300 font-medium">
-                            {i + 1}. {name}
-                          </span>
-                          <button
-                            onClick={() => removeShohibul(i)}
-                            className="p-1 text-slate-500 hover:text-rose-400 hover:bg-rose-950/20 rounded opacity-0 group-hover:opacity-100 transition-all"
-                            title="Hapus"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      ))
-                    )}
-                  </div>
-
-                  {shohibulList.length > 0 && (
-                    <button
-                      onClick={clearShohibul}
-                      className="w-full text-center text-[10px] text-rose-400 hover:text-rose-300 font-bold py-2 bg-rose-950/10 hover:bg-rose-950/20 border border-rose-900/30 rounded-lg"
-                    >
-                      Hapus Semua
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
+            <ShohibulTab
+              shohibulList={shohibulList}
+              newShohibul={newShohibul}
+              setNewShohibul={setNewShohibul}
+              shohibulTextarea={shohibulTextarea}
+              setShohibulTextarea={setShohibulTextarea}
+              showBulkShohibul={showBulkShohibul}
+              setShowBulkShohibul={setShowBulkShohibul}
+              addShohibul={addShohibul}
+              removeShohibul={removeShohibul}
+              handleBulkShohibul={handleBulkShohibul}
+              clearShohibul={clearShohibul}
+              resetShohibulDefault={resetShohibulDefault}
+            />
           )}
 
         </div>
