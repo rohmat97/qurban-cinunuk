@@ -344,6 +344,8 @@ export default function QurbanCouponApp() {
   const saveConfigToSupabase = async (isInitial = false, customRecipients?: string[], customShohibul?: string[]) => {
     try {
       if (!isInitial) setIsSaving(true);
+      
+      // 1. Sync configurations
       const payload = {
         config_key: "default",
         event_title: eventTitle,
@@ -353,8 +355,6 @@ export default function QurbanCouponApp() {
         event_loc: eventLoc,
         shohibul_title: shohibulTitle,
         footer_text: footerText,
-        recipients: customRecipients || recipients,
-        shohibul_list: customShohibul || shohibulList,
         design: {
           primaryColor,
           secondaryColor,
@@ -368,70 +368,124 @@ export default function QurbanCouponApp() {
         updated_at: new Date().toISOString()
       };
 
-      const { error } = await supabase
+      const { error: configError } = await supabase
         .from("qurban_config")
         .upsert(payload, { onConflict: "config_key" });
 
-      if (error) {
-        console.error("Error saving to Supabase:", error);
-        if (!isInitial) alert("Gagal menyimpan ke Cloud: " + error.message);
-      } else {
-        if (!isInitial) {
-          alert("Berhasil disinkronkan ke Cloud Supabase! 🎉");
+      if (configError) {
+        throw new Error("Gagal menyimpan config: " + configError.message);
+      }
+
+      // 2. Sync recipients list to dedicated recipients table
+      // Delete all existing and bulk insert new
+      const targetRecipients = customRecipients || recipients;
+      const { error: delRecError } = await supabase.from("recipients").delete().neq("id", -1);
+      if (delRecError) {
+        console.warn("Recipients deletion warning:", delRecError);
+      }
+      
+      if (targetRecipients.length > 0) {
+        const recipientsRows = targetRecipients.map(name => ({ name }));
+        const { error: recError } = await supabase.from("recipients").insert(recipientsRows);
+        if (recError) {
+          throw new Error("Gagal menyimpan penerima: " + recError.message);
         }
       }
-    } catch (err) {
+
+      // 3. Sync shohibul list to dedicated shohibul table
+      // Delete all existing and bulk insert new
+      const targetShohibul = customShohibul || shohibulList;
+      const { error: delShohError } = await supabase.from("shohibul").delete().neq("id", -1);
+      if (delShohError) {
+        console.warn("Shohibul deletion warning:", delShohError);
+      }
+
+      if (targetShohibul.length > 0) {
+        const shohibulRows = targetShohibul.map(name => ({ name }));
+        const { error: shohError } = await supabase.from("shohibul").insert(shohibulRows);
+        if (shohError) {
+          throw new Error("Gagal menyimpan shohibul: " + shohError.message);
+        }
+      }
+
+      if (!isInitial) {
+        alert("Berhasil disinkronkan ke Cloud Supabase (Relational Tables)! 🎉");
+      }
+    } catch (err: any) {
       console.error(err);
+      if (!isInitial) alert(err.message || "Gagal menyelaraskan data.");
     } finally {
       if (!isInitial) setIsSaving(false);
     }
   };
 
-  // Fetch initial config from Supabase
+  // Fetch initial config and dedicated lists from Supabase
   useEffect(() => {
     const fetchConfig = async () => {
       try {
         setIsLoadingSupabase(true);
-        const { data, error } = await supabase
+
+        // 1. Fetch Config
+        const { data: configData, error: configError } = await supabase
           .from("qurban_config")
           .select("*")
           .eq("config_key", "default")
           .single();
 
-        if (error && error.code !== "PGRST116") {
-          console.error("Error fetching config:", error);
+        if (configError && configError.code !== "PGRST116") {
+          console.error("Error fetching config:", configError);
         }
 
-        if (data) {
-          setEventTitle(data.event_title || "Kupon Daging Qurban");
-          setEventSub(data.event_sub || "Eid Al-Adha 1447 H / 2026 M");
-          setEventDate(data.event_date || "📅 Mei 2026");
-          setEventTime(data.event_time || "🕒 08.00 WIB - Selesai");
-          setEventLoc(data.event_loc || "📍 Area Keluarga");
-          setShohibulTitle(data.shohibul_title || "Shohibul Kurban (Kel. Besar H. Umar Sumarya 2026)");
-          setFooterText(data.footer_text || "*Harap membawa kupon ini saat pengambilan daging. Jazakumullah Khair.");
-          
-          if (data.recipients && Array.isArray(data.recipients) && data.recipients.length > 0) {
-            setRecipients(data.recipients);
-          }
-          if (data.shohibul_list && Array.isArray(data.shohibul_list) && data.shohibul_list.length > 0) {
-            setShohibulList(data.shohibul_list);
-          }
+        if (configData) {
+          setEventTitle(configData.event_title || "Kupon Daging Qurban");
+          setEventSub(configData.event_sub || "Eid Al-Adha 1447 H / 2026 M");
+          setEventDate(configData.event_date || "📅 Mei 2026");
+          setEventTime(configData.event_time || "🕒 08.00 WIB - Selesai");
+          setEventLoc(configData.event_loc || "📍 Area Keluarga");
+          setShohibulTitle(configData.shohibul_title || "Shohibul Kurban (Kel. Besar H. Umar Sumarya 2026)");
+          setFooterText(configData.footer_text || "*Harap membawa kupon ini saat pengambilan daging. Jazakumullah Khair.");
 
-          if (data.design) {
-            setPrimaryColor(data.design.primaryColor || "#2d5a27");
-            setSecondaryColor(data.design.secondaryColor || "#fdfbf7");
-            setTextColor(data.design.textColor || "#111111");
-            setBorderColor(data.design.borderColor || "#2d5a27");
-            setBorderStyle(data.design.borderStyle || "double");
-            setBannerColor(data.design.bannerColor || "#cbdcc8");
-            setBannerTextColor(data.design.bannerTextColor || "#2d5a27");
-            setAccentGold(data.design.accentGold !== undefined ? data.design.accentGold : true);
+          if (configData.design) {
+            setPrimaryColor(configData.design.primaryColor || "#2d5a27");
+            setSecondaryColor(configData.design.secondaryColor || "#fdfbf7");
+            setTextColor(configData.design.textColor || "#111111");
+            setBorderColor(configData.design.borderColor || "#2d5a27");
+            setBorderStyle(configData.design.borderStyle || "double");
+            setBannerColor(configData.design.bannerColor || "#cbdcc8");
+            setBannerTextColor(configData.design.bannerTextColor || "#2d5a27");
+            setAccentGold(configData.design.accentGold !== undefined ? configData.design.accentGold : true);
           }
-        } else {
-          // If database is empty, seed it with the default values!
+        }
+
+        // 2. Fetch Dedicated Recipients
+        const { data: recipientsData, error: recError } = await supabase
+          .from("recipients")
+          .select("name")
+          .order("id", { ascending: true });
+
+        if (recError) {
+          console.error("Error fetching recipients list:", recError);
+        } else if (recipientsData && recipientsData.length > 0) {
+          setRecipients(recipientsData.map(r => r.name));
+        }
+
+        // 3. Fetch Dedicated Shohibul
+        const { data: shohibulData, error: shohError } = await supabase
+          .from("shohibul")
+          .select("name")
+          .order("id", { ascending: true });
+
+        if (shohError) {
+          console.error("Error fetching shohibul list:", shohError);
+        } else if (shohibulData && shohibulData.length > 0) {
+          setShohibulList(shohibulData.map(s => s.name));
+        }
+
+        // 4. Seed if everything is empty
+        if (!configData && (!recipientsData || recipientsData.length === 0) && (!shohibulData || shohibulData.length === 0)) {
           await saveConfigToSupabase(true, recipients, shohibulList);
         }
+
       } catch (err) {
         console.error(err);
       } finally {
