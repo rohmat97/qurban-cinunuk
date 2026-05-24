@@ -125,7 +125,7 @@ body {
     width: 105mm !important;
     height: 148.5mm !important;
     box-sizing: border-box !important;
-    padding: 10mm !important; /* Proper margin from edges */
+    padding: 6mm 5mm !important; /* Exactly match screen padding */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -134,8 +134,8 @@ body {
 
   /* Precise Coupon Card fit inside cell */
   .qurban-card {
-    width: 95mm !important;
-    height: 128.5mm !important;
+    width: 100% !important;
+    height: 100% !important;
     box-shadow: none !important;
     border-radius: 8px !important;
     box-sizing: border-box !important;

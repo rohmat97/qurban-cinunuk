@@ -71,10 +71,10 @@ export default function CouponCard({
       {/* Accent Gold Corners */}
       {accentGold && (
         <>
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] border-yellow-600/40 rounded-tl no-print" />
-          <div className="absolute top-0 right-0 w-8 h-8 border-t-[3px] border-r-[3px] border-yellow-600/40 rounded-tr no-print" />
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-[3px] border-l-[3px] border-yellow-600/40 rounded-bl no-print" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] border-yellow-600/40 rounded-br no-print" />
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] border-yellow-600/40 rounded-tl" />
+          <div className="absolute top-0 right-0 w-8 h-8 border-t-[3px] border-r-[3px] border-yellow-600/40 rounded-tr" />
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-[3px] border-l-[3px] border-yellow-600/40 rounded-bl" />
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] border-yellow-600/40 rounded-br" />
         </>
       )}
 
@@ -152,19 +152,19 @@ export default function CouponCard({
 
       {/* EVENT LOGISTICS META */}
       <div
-        className="flex justify-between items-center py-1.5 px-2.5 rounded font-extrabold my-2 text-[10px]"
+        className="flex justify-between items-center py-1.5 px-2.5 rounded font-extrabold my-2 text-[9.5px]"
         style={{
           backgroundColor: `${primaryColor}15`,
           color: primaryColor
         }}
       >
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 whitespace-nowrap">
           <span>{eventDate}</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 whitespace-nowrap">
           <span>{eventTime}</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 whitespace-nowrap">
           <span>{eventLoc}</span>
         </div>
       </div>

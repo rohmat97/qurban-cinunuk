@@ -702,7 +702,7 @@ export default function QurbanCouponApp() {
                             width: "105mm",
                             height: "148.5mm",
                             boxSizing: "border-box",
-                            padding: "10px",
+                            padding: "6mm 5mm",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center"
