@@ -54,7 +54,7 @@ export default function CouponCard({
   const totalNames = col1.length + col2.length;
   // Calculate dynamic font size and vertical gap based on number of names to perfectly fill the space.
   // We lower the minimum cap from 11px to 8.5px to ensure larger lists (like 14 names) fit perfectly in 1 column without pushing the footer out!
-  const dynamicFontSize = `${Math.max(8.5, Math.min(15, 14.2 - totalNames * 0.45))}px`;
+  const dynamicFontSize = `${Math.max(10, Math.min(15, 14.2 - totalNames * 0.45))}px`;
   const dynamicGap = `${Math.max(1.5, Math.min(8, 9 - totalNames * 0.5))}px`;
 
   return (
