@@ -81,6 +81,10 @@ export default function QurbanCouponApp() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingSupabase, setIsLoadingSupabase] = useState(true);
 
+  // State persistence states
+  const [isInitialLoadDone, setIsInitialLoadDone] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
   // Apply a color preset
   const applyPreset = (preset: typeof COLOR_PRESETS[0]) => {
     setPrimaryColor(preset.primary);
@@ -167,6 +171,10 @@ export default function QurbanCouponApp() {
         }
       }
 
+      // Reset unsaved changes status on successful save
+      setHasUnsavedChanges(false);
+      localStorage.setItem("qurban_coupon_studio_unsaved", "false");
+
       if (!isInitial) {
         alert("Berhasil disinkronkan ke Cloud Supabase (Relational Tables)! 🎉");
       }
@@ -177,6 +185,45 @@ export default function QurbanCouponApp() {
       if (!isInitial) setIsSaving(false);
     }
   };
+
+  // Load draft from localStorage on mount (client-side only to avoid Next.js hydration mismatch)
+  useEffect(() => {
+    try {
+      const savedDraft = localStorage.getItem("qurban_coupon_studio_draft");
+      if (savedDraft) {
+        const draft = JSON.parse(savedDraft);
+        if (draft.eventTitle !== undefined) setEventTitle(draft.eventTitle);
+        if (draft.eventSub !== undefined) setEventSub(draft.eventSub);
+        if (draft.eventDate !== undefined) setEventDate(draft.eventDate);
+        if (draft.eventTime !== undefined) setEventTime(draft.eventTime);
+        if (draft.eventLoc !== undefined) setEventLoc(draft.eventLoc);
+        if (draft.shohibulTitle !== undefined) setShohibulTitle(draft.shohibulTitle);
+        if (draft.footerText !== undefined) setFooterText(draft.footerText);
+        if (draft.recipientMode !== undefined) setRecipientMode(draft.recipientMode);
+        if (draft.blankCount !== undefined) setBlankCount(draft.blankCount);
+        if (draft.recipients !== undefined) setRecipients(draft.recipients);
+        if (draft.shohibulList !== undefined) setShohibulList(draft.shohibulList);
+        if (draft.numberPrefix !== undefined) setNumberPrefix(draft.numberPrefix);
+        if (draft.numberStart !== undefined) setNumberStart(draft.numberStart);
+        if (draft.numberPad !== undefined) setNumberPad(draft.numberPad);
+
+        if (draft.design) {
+          if (draft.design.primaryColor !== undefined) setPrimaryColor(draft.design.primaryColor);
+          if (draft.design.secondaryColor !== undefined) setSecondaryColor(draft.design.secondaryColor);
+          if (draft.design.textColor !== undefined) setTextColor(draft.design.textColor);
+          if (draft.design.borderColor !== undefined) setBorderColor(draft.design.borderColor);
+          if (draft.design.borderStyle !== undefined) setBorderStyle(draft.design.borderStyle);
+          if (draft.design.bannerColor !== undefined) setBannerColor(draft.design.bannerColor);
+          if (draft.design.bannerTextColor !== undefined) setBannerTextColor(draft.design.bannerTextColor);
+          if (draft.design.accentGold !== undefined) setAccentGold(draft.design.accentGold);
+        }
+      }
+      const hasUnsaved = localStorage.getItem("qurban_coupon_studio_unsaved") === "true";
+      setHasUnsavedChanges(hasUnsaved);
+    } catch (err) {
+      console.error("Error loading localStorage draft:", err);
+    }
+  }, []);
 
   // Fetch initial config and dedicated lists from Supabase
   useEffect(() => {
@@ -195,27 +242,6 @@ export default function QurbanCouponApp() {
           console.error("Error fetching config:", configError);
         }
 
-        if (configData) {
-          setEventTitle(configData.event_title || "Kupon Daging Qurban");
-          setEventSub(configData.event_sub || "Eid Al-Adha 1447 H / 2026 M");
-          setEventDate(configData.event_date || "📅 Mei 2026");
-          setEventTime(configData.event_time || "🕒 08.00 WIB - Selesai");
-          setEventLoc(configData.event_loc || "📍 Area Keluarga");
-          setShohibulTitle(configData.shohibul_title || "Shohibul Kurban (Kel. Besar H. Umar Sumarya 2026)");
-          setFooterText(configData.footer_text || "*Harap membawa kupon ini saat pengambilan daging. Jazakumullah Khair.");
-
-          if (configData.design) {
-            setPrimaryColor(configData.design.primaryColor || "#2d5a27");
-            setSecondaryColor(configData.design.secondaryColor || "#fdfbf7");
-            setTextColor(configData.design.textColor || "#111111");
-            setBorderColor(configData.design.borderColor || "#2d5a27");
-            setBorderStyle(configData.design.borderStyle || "double");
-            setBannerColor(configData.design.bannerColor || "#cbdcc8");
-            setBannerTextColor(configData.design.bannerTextColor || "#2d5a27");
-            setAccentGold(configData.design.accentGold !== undefined ? configData.design.accentGold : true);
-          }
-        }
-
         // 2. Fetch Dedicated Recipients
         const { data: recipientsData, error: recError } = await supabase
           .from("recipients")
@@ -224,8 +250,6 @@ export default function QurbanCouponApp() {
 
         if (recError) {
           console.error("Error fetching recipients list:", recError);
-        } else if (recipientsData && recipientsData.length > 0) {
-          setRecipients(recipientsData.map(r => r.name));
         }
 
         // 3. Fetch Dedicated Shohibul
@@ -236,27 +260,122 @@ export default function QurbanCouponApp() {
 
         if (shohError) {
           console.error("Error fetching shohibul list:", shohError);
-        } else if (shohibulData && shohibulData.length > 0) {
-          setShohibulList(shohibulData.map(s => s.name));
         }
 
+        // Only overwrite React state with DB values if no localStorage draft exists
+        const hasLocalDraft = localStorage.getItem("qurban_coupon_studio_draft") !== null;
 
+        if (!hasLocalDraft) {
+          if (configData) {
+            setEventTitle(configData.event_title || "Kupon Daging Qurban");
+            setEventSub(configData.event_sub || "Eid Al-Adha 1447 H / 2026 M");
+            setEventDate(configData.event_date || "📅 Mei 2026");
+            setEventTime(configData.event_time || "🕒 08.00 WIB - Selesai");
+            setEventLoc(configData.event_loc || "📍 Area Keluarga");
+            setShohibulTitle(configData.shohibul_title || "Shohibul Kurban (Kel. Besar H. Umar Sumarya 2026)");
+            setFooterText(configData.footer_text || "*Harap membawa kupon ini saat pengambilan daging. Jazakumullah Khair.");
 
+            if (configData.design) {
+              setPrimaryColor(configData.design.primaryColor || "#2d5a27");
+              setSecondaryColor(configData.design.secondaryColor || "#fdfbf7");
+              setTextColor(configData.design.textColor || "#111111");
+              setBorderColor(configData.design.borderColor || "#2d5a27");
+              setBorderStyle(configData.design.borderStyle || "double");
+              setBannerColor(configData.design.bannerColor || "#cbdcc8");
+              setBannerTextColor(configData.design.bannerTextColor || "#2d5a27");
+              setAccentGold(configData.design.accentGold !== undefined ? configData.design.accentGold : true);
+            }
+          }
+
+          if (recipientsData) {
+            setRecipients(recipientsData.map(r => r.name));
+          }
+
+          if (shohibulData) {
+            setShohibulList(shohibulData.map(s => s.name));
+          }
+        }
       } catch (err) {
         console.error(err);
       } finally {
         setIsLoadingSupabase(false);
+        setIsInitialLoadDone(true);
       }
     };
 
     fetchConfig();
   }, []);
 
+  // Save changes to localStorage in real-time (runs after initial loading finishes)
+  useEffect(() => {
+    if (!isInitialLoadDone) return;
+
+    try {
+      const draft = {
+        eventTitle,
+        eventSub,
+        eventDate,
+        eventTime,
+        eventLoc,
+        shohibulTitle,
+        footerText,
+        recipientMode,
+        blankCount,
+        recipients,
+        shohibulList,
+        numberPrefix,
+        numberStart,
+        numberPad,
+        design: {
+          primaryColor,
+          secondaryColor,
+          textColor,
+          borderColor,
+          borderStyle,
+          bannerColor,
+          bannerTextColor,
+          accentGold
+        }
+      };
+      localStorage.setItem("qurban_coupon_studio_draft", JSON.stringify(draft));
+      setHasUnsavedChanges(true);
+      localStorage.setItem("qurban_coupon_studio_unsaved", "true");
+    } catch (err) {
+      console.error("Error saving draft to localStorage:", err);
+    }
+  }, [
+    isInitialLoadDone,
+    eventTitle,
+    eventSub,
+    eventDate,
+    eventTime,
+    eventLoc,
+    shohibulTitle,
+    footerText,
+    recipientMode,
+    blankCount,
+    recipients,
+    shohibulList,
+    numberPrefix,
+    numberStart,
+    numberPad,
+    primaryColor,
+    secondaryColor,
+    textColor,
+    borderColor,
+    borderStyle,
+    bannerColor,
+    bannerTextColor,
+    accentGold
+  ]);
+
   // Handle Shohibul List operations
   const addShohibul = () => {
     if (newShohibul.trim()) {
-      setShohibulList([...shohibulList, newShohibul.trim()]);
+      const newList = [...shohibulList, newShohibul.trim()];
+      setShohibulList(newList);
       setNewShohibul("");
+      saveConfigToSupabase(true, undefined, newList);
     }
   };
 
@@ -264,6 +383,7 @@ export default function QurbanCouponApp() {
     const newList = [...shohibulList];
     newList.splice(index, 1);
     setShohibulList(newList);
+    saveConfigToSupabase(true, undefined, newList);
   };
 
   const handleBulkShohibul = () => {
@@ -272,29 +392,50 @@ export default function QurbanCouponApp() {
         .split(/[\n,]/)
         .map((name) => name.trim())
         .filter((name) => name.length > 0);
-      setShohibulList([...shohibulList, ...names]);
+      const newList = [...shohibulList, ...names];
+      setShohibulList(newList);
       setShohibulTextarea("");
       setShowBulkShohibul(false);
+      saveConfigToSupabase(true, undefined, newList);
     }
   };
 
   const clearShohibul = () => {
     if (confirm("Apakah Anda yakin ingin menghapus semua nama Shohibul?")) {
       setShohibulList([]);
+      saveConfigToSupabase(true, undefined, []);
     }
   };
 
   // Reset Shohibul to the classic Umar Sumarya 2026 family list
   const resetShohibulDefault = () => {
-    setShohibulList([
-    ]);
+    const defaultList = [
+      "Een Sumarni binti Umar",
+      "Rizal Nugraha bin Dwi  Priyono dan Keluarga",
+      "Itang Dahyar bin Umar dan Keluarga",
+      "Kory Anggraeni binti Itang",
+      "Citra Maulidiah binti Bakhtiar",
+      "Acep Roni bin Umar dan Keluarga",
+      "Khusnul Yusran Taufik bin Acep",
+      "Yadi Rusmaryadi bin Ewen Ruswandi",
+      "Ade Maryati binti Umar",
+      "Rezki Novansyah bin Sonny",
+      "Vani Marindani binti Yadi",
+      "Revandra adhyasta alkhalifi bin rezki novansyah",
+      "Rasheza kamila zahra binti rezki novansyah",
+      "Rindu Mayangsari Binti Titing Sukarti"
+    ];
+    setShohibulList(defaultList);
+    saveConfigToSupabase(true, undefined, defaultList);
   };
 
   // Recipients operations
   const addRecipient = () => {
     if (newRecipient.trim()) {
-      setRecipients([...recipients, newRecipient.trim()]);
+      const newList = [...recipients, newRecipient.trim()];
+      setRecipients(newList);
       setNewRecipient("");
+      saveConfigToSupabase(true, newList, undefined);
     }
   };
 
@@ -302,6 +443,7 @@ export default function QurbanCouponApp() {
     const newList = [...recipients];
     newList.splice(index, 1);
     setRecipients(newList);
+    saveConfigToSupabase(true, newList, undefined);
   };
 
   const handleBulkRecipients = () => {
@@ -313,6 +455,7 @@ export default function QurbanCouponApp() {
       setRecipients(names);
       setRecipientsTextarea("");
       setShowBulkRecipients(false);
+      saveConfigToSupabase(true, names, undefined);
     }
   };
 
@@ -324,6 +467,7 @@ export default function QurbanCouponApp() {
   const clearRecipients = () => {
     if (confirm("Apakah Anda yakin ingin menghapus semua nama Penerima?")) {
       setRecipients([]);
+      saveConfigToSupabase(true, [], undefined);
     }
   };
 
@@ -528,15 +672,33 @@ export default function QurbanCouponApp() {
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {/* Sync status indicator */}
+            {isInitialLoadDone && (
+              hasUnsavedChanges ? (
+                <div className="flex items-center gap-1.5 text-amber-400 bg-amber-950/20 border border-amber-900/30 px-2 py-1 rounded-md" title="Ada perubahan lokal yang belum disinkronkan ke cloud">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                  <span className="text-[10px] font-bold">Belum Disimpan</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 text-emerald-400 bg-emerald-950/20 border border-emerald-900/30 px-2 py-1 rounded-md" title="Semua data tersimpan aman di cloud">
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-[10px] font-bold">Tersinkron</span>
+                </div>
+              )
+            )}
+
             {/* Supabase Sync Button */}
             <button
               onClick={() => saveConfigToSupabase()}
               disabled={isSaving}
-              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold transition-all border ${isSaving
+              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold transition-all border ${
+                isSaving
                   ? "bg-slate-900 border-slate-800 text-slate-500 cursor-not-allowed"
-                  : "bg-emerald-950/40 border-emerald-800/60 hover:bg-emerald-900/60 text-emerald-400 cursor-pointer"
-                }`}
+                  : hasUnsavedChanges
+                  ? "bg-emerald-600 border-emerald-500 hover:bg-emerald-500 text-white cursor-pointer shadow-lg shadow-emerald-950/20"
+                  : "bg-slate-900 border-slate-850 hover:bg-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 cursor-pointer"
+              }`}
               title="Simpan konfigurasi, daftar penerima, dan shohibul ke Supabase Cloud"
             >
               {isSaving ? (
