@@ -71,7 +71,7 @@ export default function QurbanCouponApp() {
 
   // App Layout States
   const [zoom, setZoom] = useState(65); // Preview zoom percentage
-  const [activeTab, setActiveTab] = useState<"content" | "recipients" | "shohibul" | "design">("content");
+  const [activeTab, setActiveTab] = useState<"content" | "recipients" | "shohibul">("content");
   const [previewSingleId, setPreviewSingleId] = useState<number | null>(null);
 
   // Supabase Sync States
@@ -436,18 +436,6 @@ export default function QurbanCouponApp() {
             <div className="flex flex-col items-center gap-1">
               <BookOpen className="w-4 h-4" />
               <span>Shohibul</span>
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab("design")}
-            className={`flex-1 py-3 px-1 text-center font-semibold text-xs border-b-2 transition-all ${activeTab === "design"
-              ? "border-emerald-500 text-emerald-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-              }`}
-          >
-            <div className="flex flex-col items-center gap-1">
-              <Palette className="w-4 h-4" />
-              <span>Desain</span>
             </div>
           </button>
         </div>
@@ -872,145 +860,6 @@ export default function QurbanCouponApp() {
             </div>
           )}
 
-          {/* TAB 4: BEAUTIFUL DESIGNS & STYLES */}
-          {activeTab === "design" && (
-            <div className="space-y-5 animate-fadeIn">
-              {/* Presets Grid */}
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Preset Tema</label>
-                <div className="grid grid-cols-1 gap-2">
-                  {COLOR_PRESETS.map((preset, index) => (
-                    <button
-                      key={index}
-                      onClick={() => applyPreset(preset)}
-                      className="flex items-center justify-between p-2.5 rounded-lg border border-slate-700 hover:border-slate-500 bg-slate-900/60 hover:bg-slate-900 text-left transition-all"
-                    >
-                      <span className="text-xs text-slate-300 font-semibold">{preset.name}</span>
-                      <div className="flex gap-1.5">
-                        <span className="w-3.5 h-3.5 rounded-full border border-black/10" style={{ backgroundColor: preset.primary }} />
-                        <span className="w-3.5 h-3.5 rounded-full border border-black/10" style={{ backgroundColor: preset.banner }} />
-                        <span className="w-3.5 h-3.5 rounded-full border border-black/10" style={{ backgroundColor: preset.secondary }} />
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Custom Colors Editor */}
-              <div className="bg-slate-900 rounded-xl p-4 border border-slate-700/60 space-y-3">
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Sliders className="w-3.5 h-3.5 text-emerald-400" />
-                  Kustomisasi Warna
-                </h4>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div>
-                    <label className="block text-slate-400 mb-1">Tema Utama</label>
-                    <div className="flex gap-1">
-                      <input
-                        type="color"
-                        value={primaryColor}
-                        onChange={(e) => setPrimaryColor(e.target.value)}
-                        className="w-8 h-8 rounded border border-slate-700 bg-transparent cursor-pointer"
-                      />
-                      <input
-                        type="text"
-                        value={primaryColor}
-                        onChange={(e) => setPrimaryColor(e.target.value)}
-                        className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 font-mono text-[10px] text-slate-300"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 mb-1">Warna Bingkai</label>
-                    <div className="flex gap-1">
-                      <input
-                        type="color"
-                        value={borderColor}
-                        onChange={(e) => setBorderColor(e.target.value)}
-                        className="w-8 h-8 rounded border border-slate-700 bg-transparent cursor-pointer"
-                      />
-                      <input
-                        type="text"
-                        value={borderColor}
-                        onChange={(e) => setBorderColor(e.target.value)}
-                        className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 font-mono text-[10px] text-slate-300"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 mb-1">Warna Header Box</label>
-                    <div className="flex gap-1">
-                      <input
-                        type="color"
-                        value={bannerColor}
-                        onChange={(e) => setBannerColor(e.target.value)}
-                        className="w-8 h-8 rounded border border-slate-700 bg-transparent cursor-pointer"
-                      />
-                      <input
-                        type="text"
-                        value={bannerColor}
-                        onChange={(e) => setBannerColor(e.target.value)}
-                        className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 font-mono text-[10px] text-slate-300"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 mb-1">Kertas Kupon</label>
-                    <div className="flex gap-1">
-                      <input
-                        type="color"
-                        value={secondaryColor}
-                        onChange={(e) => setSecondaryColor(e.target.value)}
-                        className="w-8 h-8 rounded border border-slate-700 bg-transparent cursor-pointer"
-                      />
-                      <input
-                        type="text"
-                        value={secondaryColor}
-                        onChange={(e) => setSecondaryColor(e.target.value)}
-                        className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 font-mono text-[10px] text-slate-300"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Borders styles */}
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Gaya Bingkai</label>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  {["double", "solid", "dashed"].map((style) => (
-                    <button
-                      key={style}
-                      onClick={() => setBorderStyle(style as any)}
-                      className={`py-2 px-3 rounded-lg border font-bold capitalize transition-all ${borderStyle === style
-                        ? "bg-emerald-600 border-emerald-500 text-white"
-                        : "bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200"
-                        }`}
-                    >
-                      {style === "double" ? "Ganda (Klasik)" : style}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Extra details */}
-              <div className="flex items-center justify-between p-3 bg-slate-900 rounded-xl border border-slate-700/60">
-                <div>
-                  <span className="text-xs text-slate-300 font-bold">Variasi Aksen Emas</span>
-                  <p className="text-[10px] text-slate-500">Gunakan ornamen emas bernuansa islami</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={accentGold}
-                    onChange={(e) => setAccentGold(e.target.checked)}
-                    className="sr-only peer"
-                  />
-                  <div className="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                </label>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Footer actions */}
