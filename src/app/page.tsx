@@ -1362,8 +1362,8 @@ function CouponCard({
 
   const totalNames = col1.length + col2.length;
   // Calculate dynamic font size and vertical gap based on number of names to perfectly fill the space
-  const dynamicFontSize = `${Math.max(8.5, Math.min(13, 14.5 - totalNames * 0.4))}px`;
-  const dynamicGap = `${Math.max(1, Math.min(5, 6 - totalNames * 0.35))}px`;
+  const dynamicFontSize = `${Math.max(11, Math.min(16, 18.5 - totalNames * 0.5))}px`;
+  const dynamicGap = `${Math.max(2, Math.min(8, 10 - totalNames * 0.55))}px`;
 
   return (
     <div
