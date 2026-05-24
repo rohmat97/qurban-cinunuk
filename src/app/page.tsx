@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Printer,
   Plus,
@@ -23,8 +23,10 @@ import {
   Sliders,
   PrinterIcon,
   ChevronsUpDown,
-  BookOpen
+  BookOpen,
+  Cloud
 } from "lucide-react";
+import { createClient } from "../utils/supabase/client";
 
 export default function QurbanCouponApp() {
   // Shohibul Qurban Family List State
@@ -272,6 +274,10 @@ export default function QurbanCouponApp() {
   const [activeTab, setActiveTab] = useState<"content" | "recipients" | "shohibul" | "design">("content");
   const [previewSingleId, setPreviewSingleId] = useState<number | null>(null);
 
+  // Supabase Sync States
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingSupabase, setIsLoadingSupabase] = useState(true);
+
   // Preset Colors List
   const colorPresets = [
     {
@@ -330,6 +336,111 @@ export default function QurbanCouponApp() {
     const padded = String(num).padStart(numberPad, "0");
     return `${numberPrefix}${padded}`;
   };
+
+  // Instantiate Supabase client
+  const supabase = createClient();
+
+  // Save/Sync Config to Supabase Cloud
+  const saveConfigToSupabase = async (isInitial = false, customRecipients?: string[], customShohibul?: string[]) => {
+    try {
+      if (!isInitial) setIsSaving(true);
+      const payload = {
+        config_key: "default",
+        event_title: eventTitle,
+        event_sub: eventSub,
+        event_date: eventDate,
+        event_time: eventTime,
+        event_loc: eventLoc,
+        shohibul_title: shohibulTitle,
+        footer_text: footerText,
+        recipients: customRecipients || recipients,
+        shohibul_list: customShohibul || shohibulList,
+        design: {
+          primaryColor,
+          secondaryColor,
+          textColor,
+          borderColor,
+          borderStyle,
+          bannerColor,
+          bannerTextColor,
+          accentGold
+        },
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = await supabase
+        .from("qurban_config")
+        .upsert(payload, { onConflict: "config_key" });
+
+      if (error) {
+        console.error("Error saving to Supabase:", error);
+        if (!isInitial) alert("Gagal menyimpan ke Cloud: " + error.message);
+      } else {
+        if (!isInitial) {
+          alert("Berhasil disinkronkan ke Cloud Supabase! 🎉");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      if (!isInitial) setIsSaving(false);
+    }
+  };
+
+  // Fetch initial config from Supabase
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        setIsLoadingSupabase(true);
+        const { data, error } = await supabase
+          .from("qurban_config")
+          .select("*")
+          .eq("config_key", "default")
+          .single();
+
+        if (error && error.code !== "PGRST116") {
+          console.error("Error fetching config:", error);
+        }
+
+        if (data) {
+          setEventTitle(data.event_title || "Kupon Daging Qurban");
+          setEventSub(data.event_sub || "Eid Al-Adha 1447 H / 2026 M");
+          setEventDate(data.event_date || "📅 Mei 2026");
+          setEventTime(data.event_time || "🕒 08.00 WIB - Selesai");
+          setEventLoc(data.event_loc || "📍 Area Keluarga");
+          setShohibulTitle(data.shohibul_title || "Shohibul Kurban (Kel. Besar H. Umar Sumarya 2026)");
+          setFooterText(data.footer_text || "*Harap membawa kupon ini saat pengambilan daging. Jazakumullah Khair.");
+          
+          if (data.recipients && Array.isArray(data.recipients) && data.recipients.length > 0) {
+            setRecipients(data.recipients);
+          }
+          if (data.shohibul_list && Array.isArray(data.shohibul_list) && data.shohibul_list.length > 0) {
+            setShohibulList(data.shohibul_list);
+          }
+
+          if (data.design) {
+            setPrimaryColor(data.design.primaryColor || "#2d5a27");
+            setSecondaryColor(data.design.secondaryColor || "#fdfbf7");
+            setTextColor(data.design.textColor || "#111111");
+            setBorderColor(data.design.borderColor || "#2d5a27");
+            setBorderStyle(data.design.borderStyle || "double");
+            setBannerColor(data.design.bannerColor || "#cbdcc8");
+            setBannerTextColor(data.design.bannerTextColor || "#2d5a27");
+            setAccentGold(data.design.accentGold !== undefined ? data.design.accentGold : true);
+          }
+        } else {
+          // If database is empty, seed it with the default values!
+          await saveConfigToSupabase(true, recipients, shohibulList);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoadingSupabase(false);
+      }
+    };
+
+    fetchConfig();
+  }, []);
 
   // Handle Shohibul List operations
   const addShohibul = () => {
@@ -1122,6 +1233,33 @@ export default function QurbanCouponApp() {
           </div>
 
           <div className="flex items-center gap-4">
+            {/* Supabase Sync Button */}
+            <button
+              onClick={() => saveConfigToSupabase()}
+              disabled={isSaving}
+              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold transition-all border ${
+                isSaving
+                  ? "bg-slate-900 border-slate-800 text-slate-500 cursor-not-allowed"
+                  : "bg-emerald-950/40 border-emerald-800/60 hover:bg-emerald-900/60 text-emerald-400 cursor-pointer"
+              }`}
+              title="Simpan konfigurasi, daftar penerima, dan shohibul ke Supabase Cloud"
+            >
+              {isSaving ? (
+                <>
+                  <svg className="animate-spin h-3.5 w-3.5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <Cloud className="w-3.5 h-3.5" />
+                  <span>Simpan ke Cloud</span>
+                </>
+              )}
+            </button>
+
             {/* View selectors */}
             <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-lg border border-slate-800">
               <button
