@@ -103,7 +103,7 @@ export default function QurbanCouponApp() {
   const saveConfigToSupabase = async (isInitial = false, customRecipients?: string[], customShohibul?: string[]) => {
     try {
       if (!isInitial) setIsSaving(true);
-      
+
       // 1. Sync configurations
       const payload = {
         config_key: "default",
@@ -142,7 +142,7 @@ export default function QurbanCouponApp() {
       if (delRecError) {
         console.warn("Recipients deletion warning:", delRecError);
       }
-      
+
       if (targetRecipients.length > 0) {
         const recipientsRows = targetRecipients.map(name => ({ name }));
         const { error: recError } = await supabase.from("recipients").insert(recipientsRows);
@@ -240,10 +240,7 @@ export default function QurbanCouponApp() {
           setShohibulList(shohibulData.map(s => s.name));
         }
 
-        // 4. Seed if everything is empty
-        if (!configData && (!recipientsData || recipientsData.length === 0) && (!shohibulData || shohibulData.length === 0)) {
-          await saveConfigToSupabase(true, recipients, shohibulList);
-        }
+
 
       } catch (err) {
         console.error(err);
@@ -290,20 +287,6 @@ export default function QurbanCouponApp() {
   // Reset Shohibul to the classic Umar Sumarya 2026 family list
   const resetShohibulDefault = () => {
     setShohibulList([
-      "Een Sumarni binti Umar",
-      "Rizal Nugraha bin Dwi  Priyono dan Keluarga",
-      "Itang Dahyar bin Umar dan Keluarga",
-      "Kory Anggraeni binti Itang",
-      "Citra Maulidiah binti Bakhtiar",
-      "Acep Roni bin Umar dan Keluarga",
-      "Khusnul Yusran Taufik bin Acep",
-      "Yadi Rusmaryadi bin Ewen Ruswandi",
-      "Ade Maryati binti Umar",
-      "Rezki Novansyah bin Sonny",
-      "Vani Marindani binti Yadi",
-      "Revandra adhyasta alkhalifi bin rezki novansyah",
-      "Rasheza kamila zahra binti rezki novansyah",
-      "Rindu Mayangsari Binti Titing Sukarti"
     ]);
   };
 
@@ -550,11 +533,10 @@ export default function QurbanCouponApp() {
             <button
               onClick={() => saveConfigToSupabase()}
               disabled={isSaving}
-              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold transition-all border ${
-                isSaving
+              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold transition-all border ${isSaving
                   ? "bg-slate-900 border-slate-800 text-slate-500 cursor-not-allowed"
                   : "bg-emerald-950/40 border-emerald-800/60 hover:bg-emerald-900/60 text-emerald-400 cursor-pointer"
-              }`}
+                }`}
               title="Simpan konfigurasi, daftar penerima, dan shohibul ke Supabase Cloud"
             >
               {isSaving ? (
