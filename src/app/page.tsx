@@ -1362,7 +1362,7 @@ function CouponCard({
 
   const totalNames = col1.length + col2.length;
   // Calculate dynamic font size and vertical gap based on number of names to perfectly fill the space
-  const dynamicFontSize = `${Math.max(11, Math.min(16, 18.5 - totalNames * 0.5))}px`;
+  const dynamicFontSize = `${Math.max(11, Math.min(16, 14.5 - totalNames * 0.5))}px`;
   const dynamicGap = `${Math.max(2, Math.min(8, 10 - totalNames * 0.55))}px`;
 
   return (
@@ -1491,13 +1491,13 @@ function CouponCard({
         </div>
 
         {/* Shohibul list table 1 column */}
-        <div 
+        <div
           className="mt-1.5 overflow-y-auto pr-1 flex-1 flex flex-col justify-start"
           style={{ gap: dynamicGap }}
         >
           {[...col1, ...col2].map((name, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className="font-bold flex items-start gap-1.5 leading-tight text-slate-800"
               style={{ fontSize: dynamicFontSize }}
             >
