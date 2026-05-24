@@ -1360,6 +1360,11 @@ function CouponCard({
     dashed: `3px dashed ${borderColor}`
   };
 
+  const totalNames = col1.length + col2.length;
+  // Calculate dynamic font size and vertical gap based on number of names to perfectly fill the space
+  const dynamicFontSize = `${Math.max(8.5, Math.min(13, 14.5 - totalNames * 0.4))}px`;
+  const dynamicGap = `${Math.max(1, Math.min(5, 6 - totalNames * 0.35))}px`;
+
   return (
     <div
       className="w-full h-full rounded-md shadow-sm relative overflow-hidden select-none flex flex-col justify-between qurban-card"
@@ -1486,9 +1491,16 @@ function CouponCard({
         </div>
 
         {/* Shohibul list table 1 column */}
-        <div className="space-y-[1.5px] mt-1.5  overflow-y-auto pr-1">
+        <div 
+          className="mt-1.5 overflow-y-auto pr-1 flex-1 flex flex-col justify-start"
+          style={{ gap: dynamicGap }}
+        >
           {[...col1, ...col2].map((name, i) => (
-            <div key={i} className="text-sm font-bold flex items-start gap-1.5 leading-tight text-slate-800">
+            <div 
+              key={i} 
+              className="font-bold flex items-start gap-1.5 leading-tight text-slate-800"
+              style={{ fontSize: dynamicFontSize }}
+            >
               <span className="opacity-60 w-4 text-right flex-shrink-0">{i + 1}.</span>
               <span className="break-words whitespace-normal flex-1" title={name}>
                 {name}
